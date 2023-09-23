@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.filedialog as filedialog
 import threading
 import yt_dlp as youtube_dl
+import os
 
 def selecionar_diretorio():
     diretorio_destino = filedialog.askdirectory()
@@ -34,6 +35,7 @@ def baixar_video():
                 ydl.download([url])
                 status_label.config(text="Download concluído!")
                 progress_bar.stop()
+                abrir_pasta(diretorio_destino)
         except Exception as e:
             status_label.config(text=f"Erro: {str(e)}")
             progress_bar.stop()
@@ -51,6 +53,15 @@ def download_progress_hook(d):
             progress_bar['value'] = progress_value
         except ValueError:
             pass
+
+def abrir_pasta(diretorio):
+    try:
+        os.startfile(diretorio)  # Abre o diretório no sistema padrão do sistema operacional
+    except AttributeError:
+        import subprocess
+        subprocess.Popen(['xdg-open', diretorio])  # Tente abrir a pasta no Linux
+    except Exception as e:
+        print(f"Erro ao abrir a pasta: {str(e)}")
 
 root = tk.Tk()
 root.title("YouTube Downloader")
