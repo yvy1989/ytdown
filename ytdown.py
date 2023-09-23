@@ -15,11 +15,11 @@ def baixar_video():
     baixar_apenas_audio = baixar_apenas_audio_var.get()
 
     if not url:
-        status_label.config(text="Por favor, insira uma URL.")
+        status_label.config(text="Please insert an URL.")
         return
 
     if not diretorio_destino:
-        status_label.config(text="Por favor, selecione um diretório de destino.")
+        status_label.config(text="Please select a destination directory.")
         return
 
     ydl_opts = {
@@ -34,7 +34,7 @@ def baixar_video():
         try:
             with ydl:
                 ydl.download([url])
-                status_label.config(text="Download concluído!")
+                status_label.config(text="Download finished!")
                 progress_bar.stop()
                 abrir_pasta(diretorio_destino)
         except Exception as e:
@@ -48,7 +48,7 @@ def baixar_video():
 def download_progress_hook(d):
     if d['status'] == 'downloading':
         progress = d['_percent_str']
-        status_label.config(text=f"Baixando: {progress}")
+        status_label.config(text=f"Downloading: {progress}")
         try:
             progress_value = int(d['_percent_str'].strip('%').split('.')[0])
             progress_bar['value'] = progress_value
@@ -63,7 +63,7 @@ def abrir_pasta(diretorio):
         import subprocess
         subprocess.Popen(['xdg-open', diretorio])  # Tente abrir a pasta no Linux
     except Exception as e:
-        print(f"Erro ao abrir a pasta: {str(e)}")
+        print(f"Error on open folder: {str(e)}")
 
 root = tk.Tk()
 root.title("YouTube Downloader")
@@ -73,26 +73,26 @@ window_width = 400
 window_height = 400
 root.geometry(f"{window_width}x{window_height}")
 
-url_label = tk.Label(root, text="URL do Vídeo:")
+url_label = tk.Label(root, text="Video URL:")
 url_label.pack()
 
 url_entry = tk.Entry(root, width=40)
 url_entry.pack()
 
-diretorio_label = tk.Label(root, text="Diretório de Destino:")
+diretorio_label = tk.Label(root, text="Destination directory:")
 diretorio_label.pack()
 
 diretorio_entry = tk.Entry(root, width=40)
 diretorio_entry.pack()
 
-selecionar_diretorio_button = tk.Button(root, text="Selecionar Diretório", command=selecionar_diretorio)
+selecionar_diretorio_button = tk.Button(root, text="Select Directory", command=selecionar_diretorio)
 selecionar_diretorio_button.pack()
 
 baixar_apenas_audio_var = tk.BooleanVar()
-baixar_apenas_audio_checkbutton = tk.Checkbutton(root, text="Baixar apenas áudio", variable=baixar_apenas_audio_var)
+baixar_apenas_audio_checkbutton = tk.Checkbutton(root, text="audio only", variable=baixar_apenas_audio_var)
 baixar_apenas_audio_checkbutton.pack()
 
-download_button = tk.Button(root, text="Baixar Vídeo", command=baixar_video)
+download_button = tk.Button(root, text="Download", command=baixar_video)
 download_button.pack()
 
 status_label = tk.Label(root, text="")
