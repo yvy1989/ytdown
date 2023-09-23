@@ -1,9 +1,7 @@
-#downloader program
 import tkinter as tk
 import tkinter.filedialog as filedialog
 import threading
 import yt_dlp as youtube_dl
-import os
 
 def selecionar_diretorio():
     diretorio_destino = filedialog.askdirectory()
@@ -14,6 +12,7 @@ def selecionar_diretorio():
 def baixar_video():
     url = url_entry.get()
     diretorio_destino = diretorio_entry.get()
+    baixar_apenas_audio = baixar_apenas_audio_var.get()
 
     if not url:
         status_label.config(text="Por favor, insira uma URL.")
@@ -26,6 +25,7 @@ def baixar_video():
     ydl_opts = {
         'outtmpl': f'{diretorio_destino}/%(title)s.%(ext)s',
         'progress_hooks': [download_progress_hook],
+        'format': 'bestaudio' if baixar_apenas_audio else 'best',
     }
 
     ydl = youtube_dl.YoutubeDL(ydl_opts)
@@ -57,6 +57,7 @@ def download_progress_hook(d):
 
 def abrir_pasta(diretorio):
     try:
+        import os
         os.startfile(diretorio)  # Abre o diretório no sistema padrão do sistema operacional
     except AttributeError:
         import subprocess
@@ -69,7 +70,7 @@ root.title("YouTube Downloader")
 
 # Defina as dimensões da janela em pixels
 window_width = 400
-window_height = 350
+window_height = 400
 root.geometry(f"{window_width}x{window_height}")
 
 url_label = tk.Label(root, text="URL do Vídeo:")
@@ -86,6 +87,10 @@ diretorio_entry.pack()
 
 selecionar_diretorio_button = tk.Button(root, text="Selecionar Diretório", command=selecionar_diretorio)
 selecionar_diretorio_button.pack()
+
+baixar_apenas_audio_var = tk.BooleanVar()
+baixar_apenas_audio_checkbutton = tk.Checkbutton(root, text="Baixar apenas áudio", variable=baixar_apenas_audio_var)
+baixar_apenas_audio_checkbutton.pack()
 
 download_button = tk.Button(root, text="Baixar Vídeo", command=baixar_video)
 download_button.pack()
